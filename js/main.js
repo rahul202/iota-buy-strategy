@@ -77,6 +77,7 @@ function updateHysteresesStrategies() {
     const miotaToETHToUSDToMIOTA = startingMIOTA * ethPerMIOTA * usdPerETH / usdPerMIOTA
     const miotaToBTCToETHToMIOTA = startingMIOTA * btcPerMIOTA / btcPerETH / ethPerMIOTA
     const miotaToETHToBTCToMIOTA = startingMIOTA * ethPerMIOTA * btcPerETH / btcPerMIOTA
+    const makersFeeFactor = 0.998
 
     // TODO: Refactor to use templating
     const hystereses = [
@@ -137,9 +138,9 @@ const currencyExchange = "Bitfinex"
 
 $(function(){
     $.getJSON(`https://min-api.cryptocompare.com/data/price?fsym=IOT&tsyms=BTC,USD,ETH&tryConversion=false&e=${currencyExchange}`, function(data) {
-        usdPerMIOTA = data.USD
-        btcPerMIOTA = data.BTC
-        ethPerMIOTA = data.ETH
+        usdPerMIOTA = data.USD * makersFeeFactor
+        btcPerMIOTA = data.BTC * makersFeeFactor
+        ethPerMIOTA = data.ETH * makersFeeFactor
         updateTable()
     })
     .fail(function(data) {
@@ -147,7 +148,7 @@ $(function(){
     });
 
     $.getJSON(`https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD&tryConversion=false&e=${currencyExchange}`, function(data) {
-        usdPerBTC = data.USD
+        usdPerBTC = data.USD * makersFeeFactor
         updateTable()
     })
     .fail(function(data) {
@@ -155,8 +156,8 @@ $(function(){
     });
 
     $.getJSON(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,BTC&tryConversion=false&e=${currencyExchange}`, function(data) {
-        usdPerETH = data.USD
-        btcPerETH = data.BTC
+        usdPerETH = data.USD * makersFeeFactor
+        btcPerETH = data.BTC * makersFeeFactor
         updateTable()
     })
     .fail(function(data) {
